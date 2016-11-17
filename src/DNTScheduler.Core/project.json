@@ -1,20 +1,20 @@
 {
-    "version": "1.0.0-*",
+    "version": "1.0.1-*",
 
     "authors": [ "Vahid Nasiri" ],
     "packOptions": {
         "owners": [ "Vahid Nasiri" ],
-        "tags": [ "MVC", "aspnetcore", "captcha", ".NET Core", "Scheduler", "ASP.NET", "Tasks", "Jobs", "task", "job", "recurrent", "recurring" ],
+        "tags": [ "MVC", "aspnetcore", ".NET Core", "Scheduler", "ASP.NET", "Tasks", "Jobs", "task", "job", "recurrent", "recurring" ],
         "licenseUrl": "https://github.com/VahidN/DNTScheduler.Core/blob/master/LICENSE.md",
         "projectUrl": "https://github.com/VahidN/DNTScheduler.Core"
     },
     "description": "DNTScheduler.Core is a lightweight ASP.NET Core's background tasks runner and scheduler.",
 
     "dependencies": {
-        "Microsoft.AspNetCore.Hosting.Abstractions": "1.0.0",
-        "Microsoft.Extensions.Logging.Abstractions": "1.0.0",
-        "Microsoft.Extensions.Options": "1.0.0",
-        "NETStandard.Library": "1.6.0"
+        "Microsoft.AspNetCore.Hosting.Abstractions": "1.1.0",
+        "Microsoft.Extensions.Logging.Abstractions": "1.1.0",
+        "Microsoft.Extensions.Options": "1.1.0",
+        "NETStandard.Library": "1.6.1"
     },
 
     "frameworks": {
