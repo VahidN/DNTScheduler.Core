@@ -1,20 +1,19 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.26228.4
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{86CAC599-F1E7-409F-8791-9729EE053F73}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{88774FE0-A5CE-467D-9900-9429C243514A}"
 	ProjectSection(SolutionItems) = preProject
-		global.json = global.json
 		LICENSE.md = LICENSE.md
 		README.md = README.md
 	EndProjectSection
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "DNTScheduler.Core", "src\DNTScheduler.Core\DNTScheduler.Core.xproj", "{0E1A1CD8-38B0-48EA-9B33-C1E1A51F5D13}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DNTScheduler.Core", "src\DNTScheduler.Core\DNTScheduler.Core.csproj", "{0E1A1CD8-38B0-48EA-9B33-C1E1A51F5D13}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "DNTScheduler.TestWebApp", "src\DNTScheduler.TestWebApp\DNTScheduler.TestWebApp.xproj", "{3D6569F4-0D8A-4A9D-A333-09C790F2A673}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DNTScheduler.TestWebApp", "src\DNTScheduler.TestWebApp\DNTScheduler.TestWebApp.csproj", "{3D6569F4-0D8A-4A9D-A333-09C790F2A673}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
