@@ -19,6 +19,13 @@ namespace DNTScheduler.Core
         }
 
         /// <summary>
+        /// DNTScheduler needs a ping service to keep it alive.
+        /// Set it to false if you don't need it.
+        /// </summary>
+        /// <returns></returns>
+        public bool AddPingTask { set; get; } = true;
+
+        /// <summary>
         /// Gets the list of the scheduled tasks.
         /// </summary>
         public ISet<ScheduledTaskStatus> Tasks { get; }

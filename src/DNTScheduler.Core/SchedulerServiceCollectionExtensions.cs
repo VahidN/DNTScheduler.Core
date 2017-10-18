@@ -36,8 +36,11 @@ namespace DNTScheduler.Core
                 services.TryAddTransient(task.TaskType);
             }
 
-            storage.AddScheduledTask<PingTask>(runAt: utcNow => utcNow.Second == 1);
-            services.TryAddSingleton<PingTask>();
+            if (storage.AddPingTask)
+            {
+                storage.AddScheduledTask<PingTask>(runAt: utcNow => utcNow.Second == 1);
+                services.TryAddSingleton<PingTask>();
+            }
 
             services.TryAddSingleton(Options.Create(storage));
         }

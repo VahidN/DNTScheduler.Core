@@ -41,9 +41,9 @@ namespace DNTScheduler.TestWebApp.ScheduledTasks
         }
     }
 }
-``` 
+```
 The `RunAsync` method represents the task's logic.
- 
+
 * To register this new task, call `services.AddDNTScheduler();` method in your [Startup class](/src/DNTScheduler.TestWebApp/Startup.cs):
 ```csharp
 namespace DNTScheduler.TestWebApp
@@ -57,6 +57,9 @@ namespace DNTScheduler.TestWebApp
 
             services.AddDNTScheduler(options =>
             {
+                // DNTScheduler needs a ping service to keep it alive. Set it to false if you don't need it.
+                // options.AddPingTask = true;
+
                 options.AddScheduledTask<DoBackupTask>(
                     runAt: utcNow =>
                     {
@@ -65,7 +68,7 @@ namespace DNTScheduler.TestWebApp
                     },
                     order: 2);
             });
-        }      
+        }
 ```
 `AddDNTScheduler` method, adds this new task to the list of the defined tasks. Also its first parameter defines the custom logic of the running intervals of this task. It's a callback method that will be called every second and provides the utcNow value. If it returns true, the job will be executed.
 If you have multiple jobs at the same time, the `order` parameter's value indicates the order of their execution.
