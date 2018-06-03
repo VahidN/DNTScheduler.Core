@@ -25,7 +25,7 @@ namespace DNTScheduler.TestWebApp.ScheduledTasks
 
             _logger.LogInformation("Running Do Backup");
 
-            await Task.Delay(TimeSpan.FromMinutes(3)).ConfigureAwait(false);
+            await Task.Delay(TimeSpan.FromMinutes(3));
         }
     }
 }

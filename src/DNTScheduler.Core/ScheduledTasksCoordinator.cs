@@ -128,14 +128,14 @@ namespace DNTScheduler.Core
                 while (_tasksStorage.Value.Tasks.Any(x => x.IsRunning) && timeOut >= 0)
                 {
                     // still running ...
-                    await Task.Delay(50).ConfigureAwait(false);
+                    await Task.Delay(50);
                     timeOut -= 50;
                 }
             }
             finally
             {
                 _jobsRunnerTimer.Stop();
-                await _thisApplication.WakeUp().ConfigureAwait(false);
+                await _thisApplication.WakeUp();
             }
         }
 

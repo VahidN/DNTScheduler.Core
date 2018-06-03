@@ -24,7 +24,7 @@ namespace DNTScheduler.TestWebApp.ScheduledTasks
 
             _logger.LogInformation("Running The LongRunningTask.");
 
-            await Task.Delay(TimeSpan.FromMinutes(3)).ConfigureAwait(false);
+            await Task.Delay(TimeSpan.FromMinutes(3));
         }
     }
 }

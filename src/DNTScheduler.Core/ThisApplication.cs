@@ -29,7 +29,7 @@ namespace DNTScheduler.Core
 
             _client.DefaultRequestHeaders.ConnectionClose = true;
             _client.DefaultRequestHeaders.Add("User-Agent", "DNTScheduler 1.0");
-            await _client.GetStringAsync(SiteRootUrl).ConfigureAwait(false);
+            await _client.GetStringAsync(SiteRootUrl);
         }
     }
 }

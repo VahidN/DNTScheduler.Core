@@ -34,7 +34,7 @@ namespace DNTScheduler.Core
                 return;
             }
 
-            await _thisApplication.WakeUp().ConfigureAwait(false);
+            await _thisApplication.WakeUp();
         }
     }
 }

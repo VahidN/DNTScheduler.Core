@@ -3,6 +3,7 @@ using DNTScheduler.Core;
 using DNTScheduler.TestWebApp.ScheduledTasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Logging;
@@ -13,7 +14,7 @@ namespace DNTScheduler.TestWebApp
     {
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc();
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
             services.AddDirectoryBrowser();
 
             services.AddDNTScheduler(options =>
