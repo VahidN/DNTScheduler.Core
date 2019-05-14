@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <Description>DNTScheduler.Core is a lightweight ASP.NET Core's background tasks runner and scheduler.</Description>
-    <VersionPrefix>1.0.6</VersionPrefix>
+    <VersionPrefix>1.0.7</VersionPrefix>
     <Authors>Vahid Nasiri</Authors>
     <TargetFrameworks>netstandard1.6;netstandard2.0</TargetFrameworks>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
@@ -9,7 +9,7 @@
     <PackageId>DNTScheduler.Core</PackageId>
     <PackageTags>MVC;aspnetcore;.NET Core;Scheduler;ASP.NET;Tasks;Jobs;task;job;recurrent;recurring</PackageTags>
     <PackageProjectUrl>https://github.com/VahidN/DNTScheduler.Core</PackageProjectUrl>
-    <PackageLicenseUrl>https://github.com/VahidN/DNTScheduler.Core/blob/master/LICENSE.md</PackageLicenseUrl>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
     <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
@@ -22,9 +22,9 @@
     <PackageReference Include="Microsoft.Extensions.Options" Version="1.1.2" />
   </ItemGroup>
   <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
-    <PackageReference Include="Microsoft.AspNetCore.Hosting.Abstractions" Version="2.1.1" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="2.1.1" />
-    <PackageReference Include="Microsoft.Extensions.Options" Version="2.1.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Hosting.Abstractions" Version="2.2.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="2.2.0" />
+    <PackageReference Include="Microsoft.Extensions.Options" Version="2.2.0" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <PlatformTarget>anycpu</PlatformTarget>
