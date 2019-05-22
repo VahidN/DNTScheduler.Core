@@ -59,8 +59,8 @@ namespace DNTScheduler.TestWebApp
 
             services.AddDNTScheduler(options =>
             {
-                // DNTScheduler needs a ping service to keep it alive. Set it to false if you don't need it.
-                // options.AddPingTask = true;
+                // DNTScheduler needs a ping service to keep it alive. Set it to false if you don't need it. Its default value is true.
+                // options.AddPingTask = false;
 
                 options.AddScheduledTask<DoBackupTask>(
                     runAt: utcNow =>

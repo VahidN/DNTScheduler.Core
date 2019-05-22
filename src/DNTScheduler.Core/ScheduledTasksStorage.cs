@@ -20,7 +20,7 @@ namespace DNTScheduler.Core
 
         /// <summary>
         /// DNTScheduler needs a ping service to keep it alive.
-        /// Set it to false if you don't need it.
+        /// Set it to false if you don't need it. Its default value is true.
         /// </summary>
         /// <returns></returns>
         public bool AddPingTask { set; get; } = true;
