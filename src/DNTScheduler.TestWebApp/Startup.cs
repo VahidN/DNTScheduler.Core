@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Hosting;
 
 namespace DNTScheduler.TestWebApp
 {
@@ -14,8 +15,9 @@ namespace DNTScheduler.TestWebApp
     {
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
-            services.AddDirectoryBrowser();
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
+            services.AddControllersWithViews();
+            services.AddRazorPages();
 
             services.AddDNTScheduler(options =>
             {
@@ -43,15 +45,10 @@ namespace DNTScheduler.TestWebApp
             });
         }
 
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)
         {
-            loggerFactory.AddDebug(minLevel: LogLevel.Debug);
-
             var logger = loggerFactory.CreateLogger(typeof(Startup));
-            app.UseDNTScheduler(onUnexpectedException: (ex, name) =>
-            {
-                logger.LogError(0, ex, $"Failed running {name}");
-            });
+            app.UseDNTScheduler(onUnexpectedException: (ex, name) => logger.LogError(0, ex, $"Failed running {name}"));
 
             if (env.IsDevelopment())
             {
@@ -64,25 +61,16 @@ namespace DNTScheduler.TestWebApp
 
             app.UseHttpsRedirection();
 
-            // Serve wwwroot as root
-            app.UseFileServer();
+            app.UseStaticFiles();
 
-            app.UseFileServer(new FileServerOptions
+            app.UseRouting();
+
+            app.UseEndpoints(endpoints =>
             {
-                // Set root of file server
-                FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "bower_components")),
-                // Only react to requests that match this path
-                RequestPath = "/bower_components",
-                // Don't expose file system
-                EnableDirectoryBrowsing = false
-            });
-
-
-            app.UseMvc(routes =>
-            {
-                routes.MapRoute(
+                endpoints.MapControllerRoute(
                     name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
+                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                endpoints.MapRazorPages();
             });
         }
     }

@@ -1,20 +1,16 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 using DNTScheduler.Core;
 using DNTScheduler.TestWebApp.ScheduledTasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Microsoft.OpenApi.Models;
+using Microsoft.Extensions.Hosting;
 
 namespace DNTScheduler.TestApi
 {
@@ -45,21 +41,8 @@ namespace DNTScheduler.TestApi
                 setupAction.Filters.Add(new ProducesDefaultResponseTypeAttribute());
                 setupAction.Filters.Add(new ProducesResponseTypeAttribute(StatusCodes.Status401Unauthorized));
                 setupAction.ReturnHttpNotAcceptable = true; // Status406NotAcceptable
-
-                var jsonOutputFormatter = setupAction.OutputFormatters
-                    .OfType<JsonOutputFormatter>().FirstOrDefault();
-
-                if (jsonOutputFormatter != null)
-                {
-                    // remove text/json as it isn't the approved media type
-                    // for working with JSON at API level
-                    if (jsonOutputFormatter.SupportedMediaTypes.Contains("text/json"))
-                    {
-                        jsonOutputFormatter.SupportedMediaTypes.Remove("text/json");
-                    }
-                }
-            }).SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
-
+            }).SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
+            services.AddControllers();
 
             services.AddSwaggerGen(setupAction =>
             {
@@ -89,15 +72,10 @@ namespace DNTScheduler.TestApi
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)
         {
-            loggerFactory.AddDebug(minLevel: LogLevel.Debug);
-
             var logger = loggerFactory.CreateLogger(typeof(Startup));
-            app.UseDNTScheduler(onUnexpectedException: (ex, name) =>
-            {
-                logger.LogError(0, ex, $"Failed running {name}");
-            });
+            app.UseDNTScheduler(onUnexpectedException: (ex, name) => logger.LogError(0, ex, $"Failed running {name}"));
 
             if (env.IsDevelopment())
             {
@@ -123,11 +101,13 @@ namespace DNTScheduler.TestApi
 
             app.UseStaticFiles();
 
-            app.UseMvc(routes =>
+            app.UseRouting();
+
+            app.UseEndpoints(endpoints =>
             {
-                routes.MapRoute(
+                endpoints.MapControllerRoute(
                     name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
+                    pattern: "{controller=Home}/{action=Index}/{id?}");
             });
         }
     }

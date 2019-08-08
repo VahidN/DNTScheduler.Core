@@ -9,6 +9,10 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
+#if NETCOREAPP3_0
+using Microsoft.Extensions.Hosting;
+#endif
+
 namespace DNTScheduler.Core
 {
     /// <summary>
@@ -31,7 +35,11 @@ namespace DNTScheduler.Core
         /// </summary>
         public ScheduledTasksCoordinator(
             ILogger<ScheduledTasksCoordinator> logger,
+#if !NETCOREAPP3_0
             IApplicationLifetime applicationLifetime,
+#else
+            IHostApplicationLifetime applicationLifetime,
+#endif
             IOptions<ScheduledTasksStorage> tasksStorage,
             IJobsRunnerTimer jobsRunnerTimer,
             IThisApplication thisApplication,

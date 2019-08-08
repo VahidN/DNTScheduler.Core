@@ -1,9 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <Description>DNTScheduler.Core is a lightweight ASP.NET Core's background tasks runner and scheduler.</Description>
-    <VersionPrefix>1.0.7</VersionPrefix>
+    <VersionPrefix>1.1.0</VersionPrefix>
     <Authors>Vahid Nasiri</Authors>
-    <TargetFrameworks>netstandard1.6;netstandard2.0</TargetFrameworks>
+    <TargetFrameworks>netcoreapp3.0;netstandard1.6;netstandard2.0</TargetFrameworks>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <AssemblyName>DNTScheduler.Core</AssemblyName>
     <PackageId>DNTScheduler.Core</PackageId>
@@ -28,5 +28,11 @@
   </ItemGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <PlatformTarget>anycpu</PlatformTarget>
+  </PropertyGroup>
+  <ItemGroup Condition=" '$(TargetFramework)' == 'netcoreapp3.0' ">
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+  <PropertyGroup Condition="'$(TargetFramework)' == 'netcoreapp3.0'">
+    <DefineConstants>NETCOREAPP3_0</DefineConstants>
   </PropertyGroup>
 </Project>
