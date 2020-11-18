@@ -1,7 +1,5 @@
 # DNTScheduler.Core
 
-[![Build status](https://ci.appveyor.com/api/projects/status/x1r05odufaqgb1uq?svg=true)](https://ci.appveyor.com/project/VahidN/dntscheduler-core)
-
 DNTScheduler.Core is a lightweight ASP.NET Core's background tasks runner and scheduler.
 
 ## Install via NuGet
