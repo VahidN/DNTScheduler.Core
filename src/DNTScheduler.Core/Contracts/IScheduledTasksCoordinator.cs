@@ -9,11 +9,6 @@ namespace DNTScheduler.Core.Contracts
     public interface IScheduledTasksCoordinator
     {
         /// <summary>
-        /// Fires on unhandled exceptions.
-        /// </summary>
-        Action<Exception, string> OnUnexpectedException { set; get; }
-
-        /// <summary>
         /// Starts the scheduler.
         /// </summary>
         void Start();

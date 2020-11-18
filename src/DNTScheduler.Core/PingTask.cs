@@ -8,14 +8,14 @@ namespace DNTScheduler.Core
     /// </summary>
     public class PingTask : IScheduledTask
     {
-        private readonly IThisApplication _thisApplication;
+        private readonly MySitePingClient _pingClient;
 
         /// <summary>
         /// DNTScheduler needs a ping service to keep it alive.
         /// </summary>
-        public PingTask(IThisApplication thisApplication)
+        public PingTask(MySitePingClient pingClient)
         {
-            _thisApplication = thisApplication;
+            _pingClient = pingClient;
         }
 
         /// <summary>
@@ -34,7 +34,7 @@ namespace DNTScheduler.Core
                 return;
             }
 
-            await _thisApplication.WakeUp();
+            await _pingClient.WakeUp("/");
         }
     }
 }

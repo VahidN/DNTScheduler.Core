@@ -16,10 +16,6 @@ namespace DNTScheduler.Core
         /// </summary>
         public static void AddDNTScheduler(this IServiceCollection services, Action<ScheduledTasksStorage> options)
         {
-            services.CheckArgumentNull(nameof(services));
-            options.CheckArgumentNull(nameof(options));
-
-            services.TryAddSingleton<IThisApplication, ThisApplication>();
             services.TryAddSingleton<IJobsRunnerTimer, JobsRunnerTimer>();
             services.TryAddSingleton<IScheduledTasksCoordinator, ScheduledTasksCoordinator>();
 
@@ -30,19 +26,35 @@ namespace DNTScheduler.Core
         {
             var storage = new ScheduledTasksStorage();
             options(storage);
+            registerTasks(services, storage);
+            addPingTask(services, storage);
+            services.TryAddSingleton(Options.Create(storage));
+        }
 
+        private static void registerTasks(IServiceCollection services, ScheduledTasksStorage storage)
+        {
             foreach (var task in storage.Tasks)
             {
                 services.TryAddTransient(task.TaskType);
             }
+        }
 
-            if (storage.AddPingTask)
+        private static void addPingTask(IServiceCollection services, ScheduledTasksStorage storage)
+        {
+            if (string.IsNullOrWhiteSpace(storage.SiteRootUrl))
             {
-                storage.AddScheduledTask<PingTask>(runAt: utcNow => utcNow.Second == 1);
-                services.TryAddSingleton<PingTask>();
+                return;
             }
 
-            services.TryAddSingleton(Options.Create(storage));
+            services.AddHttpClient<MySitePingClient>(client =>
+            {
+                client.BaseAddress = new Uri(storage.SiteRootUrl);
+                client.DefaultRequestHeaders.ConnectionClose = true;
+                client.DefaultRequestHeaders.Add("User-Agent", "DNTScheduler 1.0");
+            });
+
+            storage.AddScheduledTask<PingTask>(runAt: utcNow => utcNow.Second == 1);
+            services.TryAddSingleton<PingTask>();
         }
     }
 }

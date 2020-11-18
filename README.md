@@ -1,11 +1,11 @@
-DNTScheduler.Core
-=======
+# DNTScheduler.Core
+
 [![Build status](https://ci.appveyor.com/api/projects/status/x1r05odufaqgb1uq?svg=true)](https://ci.appveyor.com/project/VahidN/dntscheduler-core)
 
 DNTScheduler.Core is a lightweight ASP.NET Core's background tasks runner and scheduler.
 
-Install via NuGet
------------------
+## Install via NuGet
+
 To install DNTScheduler, run the following command in the Package Manager Console:
 
 ```
@@ -15,7 +15,9 @@ PM> Install-Package DNTScheduler.Core
 You can also view the [package page](http://www.nuget.org/packages/DNTScheduler.Core/) on NuGet.
 
 ## Usage
-* After installing the DNTScheduler.Core package, to define a new task, [create a new class](/src/DNTScheduler.TestWebApp/ScheduledTasks/) that implements the `IScheduledTask` interface:
+
+- After installing the DNTScheduler.Core package, to define a new task, [create a new class](/src/DNTScheduler.TestWebApp/ScheduledTasks/) that implements the `IScheduledTask` interface:
+
 ```csharp
 namespace DNTScheduler.TestWebApp.ScheduledTasks
 {
@@ -44,9 +46,11 @@ namespace DNTScheduler.TestWebApp.ScheduledTasks
     }
 }
 ```
+
 The `RunAsync` method represents the task's logic.
 
-* To register this new task, call `services.AddDNTScheduler();` method in your [Startup class](/src/DNTScheduler.TestWebApp/Startup.cs):
+- To register this new task, call `services.AddDNTScheduler();` method in your [Startup class](/src/DNTScheduler.TestWebApp/Startup.cs):
+
 ```csharp
 namespace DNTScheduler.TestWebApp
 {
@@ -59,8 +63,9 @@ namespace DNTScheduler.TestWebApp
 
             services.AddDNTScheduler(options =>
             {
-                // DNTScheduler needs a ping service to keep it alive. Set it to false if you don't need it. Its default value is true.
-                // options.AddPingTask = false;
+                // DNTScheduler needs a ping service to keep it alive.
+                // If you don't need it, don't add it!
+                options.AddPingTask(siteRootUrl: "https://localhost:5001");
 
                 options.AddScheduledTask<DoBackupTask>(
                     runAt: utcNow =>
@@ -72,15 +77,16 @@ namespace DNTScheduler.TestWebApp
             });
         }
 ```
+
 `AddDNTScheduler` method, adds this new task to the list of the defined tasks. Also its first parameter defines the custom logic of the running intervals of this task. It's a callback method that will be called every second and provides the utcNow value. If it returns true, the job will be executed.
 If you have multiple jobs at the same time, the `order` parameter's value indicates the order of their execution.
 
-* Finally to start running the registered tasks, call `app.UseDNTScheduler()` method in your [Startup class](/src/DNTScheduler.TestWebApp/Startup.cs):
+- Finally to start running the registered tasks, call `app.UseDNTScheduler()` method in your [Startup class](/src/DNTScheduler.TestWebApp/Startup.cs):
+
 ```csharp
 public void Configure(IApplicationBuilder app)
 {
     app.UseDNTScheduler();
 ```
-
 
 Please follow the [DNTScheduler.TestWebApp](/src/DNTScheduler.TestWebApp) sample for more details.

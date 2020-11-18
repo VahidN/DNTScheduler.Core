@@ -10,6 +10,8 @@ namespace DNTScheduler.Core
     /// </summary>
     public class ScheduledTasksStorage
     {
+        internal string SiteRootUrl { set; get; }
+
         /// <summary>
         /// Scheduled Tasks Storage
         /// </summary>
@@ -19,15 +21,17 @@ namespace DNTScheduler.Core
         }
 
         /// <summary>
-        /// DNTScheduler needs a ping service to keep it alive.
-        /// Set it to false if you don't need it. Its default value is true.
-        /// </summary>
-        public bool AddPingTask { set; get; } = true;
-
-        /// <summary>
         /// Gets the list of the scheduled tasks.
         /// </summary>
         public ISet<ScheduledTaskStatus> Tasks { get; }
+
+        /// <summary>
+        /// DNTScheduler needs a ping service to keep it alive.
+        /// </summary>
+        public void AddPingTask(string siteRootUrl)
+        {
+            SiteRootUrl = siteRootUrl;
+        }
 
         /// <summary>
         /// Adds a new scheduled task.
@@ -45,8 +49,6 @@ namespace DNTScheduler.Core
         /// </param>
         public void AddScheduledTask<T>(Func<DateTime, bool> runAt, int order = 1) where T : IScheduledTask
         {
-            runAt.CheckArgumentNull(nameof(runAt));
-
             Tasks.Add(new ScheduledTaskStatus
             {
                 TaskType = typeof(T),

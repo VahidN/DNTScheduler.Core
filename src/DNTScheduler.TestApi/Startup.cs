@@ -28,8 +28,10 @@ namespace DNTScheduler.TestApi
         {
             services.AddDNTScheduler(options =>
             {
-                // DNTScheduler needs a ping service to keep it alive. Set it to false if you don't need it. Its default value is true.
-                // options.AddPingTask = false;
+                // DNTScheduler needs a ping service to keep it alive.
+                // If you don't need it, don't add it!
+                options.AddPingTask(siteRootUrl: "https://localhost:5001");
+
                 options.AddScheduledTask<LongRunningTask>(utcNow => utcNow.Second == 1);
             });
 
@@ -72,10 +74,9 @@ namespace DNTScheduler.TestApi
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            var logger = loggerFactory.CreateLogger(typeof(Startup));
-            app.UseDNTScheduler(onUnexpectedException: (ex, name) => logger.LogError(0, ex, $"Failed running {name}"));
+            app.UseDNTScheduler();
 
             if (env.IsDevelopment())
             {

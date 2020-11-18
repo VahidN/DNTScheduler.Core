@@ -10,7 +10,7 @@
             "request": "launch",
             "preLaunchTask": "build",
             // If you have changed target frameworks, make sure to update the program path.
-            "program": "${workspaceRoot}/src/DNTScheduler.TestWebApp/bin/Debug/netcoreapp2.2/DNTScheduler.TestWebApp.dll",
+            "program": "${workspaceRoot}/src/DNTScheduler.TestWebApp/bin/Debug/net5.0/DNTScheduler.TestWebApp.dll",
             "args": [],
             "cwd": "${workspaceRoot}/src/DNTScheduler.TestWebApp",
             "stopAtEntry": false,

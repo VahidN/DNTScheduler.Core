@@ -4,14 +4,10 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using DNTScheduler.Core.Contracts;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-
-#if NETCOREAPP3_0
 using Microsoft.Extensions.Hosting;
-#endif
 
 namespace DNTScheduler.Core
 {
@@ -27,7 +23,6 @@ namespace DNTScheduler.Core
         private readonly ILogger<ScheduledTasksCoordinator> _logger;
         private readonly IServiceProvider _serviceProvider;
         private readonly IOptions<ScheduledTasksStorage> _tasksStorage;
-        private readonly IThisApplication _thisApplication;
         private bool _isShuttingDown;
 
         /// <summary>
@@ -35,27 +30,14 @@ namespace DNTScheduler.Core
         /// </summary>
         public ScheduledTasksCoordinator(
             ILogger<ScheduledTasksCoordinator> logger,
-#if !NETCOREAPP3_0
-            IApplicationLifetime applicationLifetime,
-#else
             IHostApplicationLifetime applicationLifetime,
-#endif
             IOptions<ScheduledTasksStorage> tasksStorage,
             IJobsRunnerTimer jobsRunnerTimer,
-            IThisApplication thisApplication,
             IServiceProvider serviceProvider)
         {
-            logger.CheckArgumentNull(nameof(logger));
-            applicationLifetime.CheckArgumentNull(nameof(applicationLifetime));
-            tasksStorage.CheckArgumentNull(nameof(tasksStorage));
-            jobsRunnerTimer.CheckArgumentNull(nameof(jobsRunnerTimer));
-            thisApplication.CheckArgumentNull(nameof(thisApplication));
-            serviceProvider.CheckArgumentNull(nameof(serviceProvider));
-
             _logger = logger;
             _tasksStorage = tasksStorage;
             _jobsRunnerTimer = jobsRunnerTimer;
-            _thisApplication = thisApplication;
             _serviceProvider = serviceProvider;
             applicationLifetime.ApplicationStopping.Register(() =>
             {
@@ -63,11 +45,6 @@ namespace DNTScheduler.Core
                 disposeResources().Wait();
             });
         }
-
-        /// <summary>
-        /// Fires on unhandled exceptions.
-        /// </summary>
-        public Action<Exception, string> OnUnexpectedException { set; get; }
 
         /// <summary>
         /// Starts the scheduler.
@@ -83,21 +60,23 @@ namespace DNTScheduler.Core
             {
                 var now = DateTime.UtcNow;
 
-                foreach (var taskStatus in _tasksStorage.Value.Tasks.Where(x => x.IsRunning && x.RunAt(now)))
-                {
-                    _logger.LogWarning($"Ignoring `{taskStatus}`. It's still running.");
-                }
-
                 var tasks = new List<Task>();
-                foreach (var taskStatus in _tasksStorage.Value.Tasks.Where(x => !x.IsRunning && x.RunAt(now))
-                                                              .OrderBy(x => x.Order))
+                foreach (var taskStatus in _tasksStorage.Value.Tasks
+                                                                .Where(x => x.RunAt(now))
+                                                                .OrderBy(x => x.Order))
                 {
                     if (_isShuttingDown)
                     {
                         return;
                     }
 
-                    tasks.Add(Task.Run(() => runTask(taskStatus)));
+                    if (taskStatus.IsRunning)
+                    {
+                        _logger.LogInformation($"Ignoring `{taskStatus}` task. It's still running.");
+                        continue;
+                    }
+
+                    tasks.Add(Task.Run(() => runTask(taskStatus, now)));
                 }
 
                 if (tasks.Any())
@@ -143,11 +122,11 @@ namespace DNTScheduler.Core
             finally
             {
                 _jobsRunnerTimer.Stop();
-                await _thisApplication.WakeUp();
+                await _serviceProvider.GetService<MySitePingClient>()?.WakeUp("/");
             }
         }
 
-        private void runTask(ScheduledTaskStatus taskStatus)
+        private void runTask(ScheduledTaskStatus taskStatus, DateTime now)
         {
             using (var serviceScope = _serviceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope())
             {
@@ -163,12 +142,12 @@ namespace DNTScheduler.Core
                     }
 
                     taskStatus.IsRunning = true;
-                    taskStatus.LastRun = DateTime.UtcNow;
+                    taskStatus.LastRun = now;
 
-                    _logger.LogInformation($"Start running {name}");
+                    _logger.LogInformation($"Start running `{name}` task @ {now}.");
                     scheduledTask.RunAsync().Wait();
 
-                    _logger.LogInformation($"Finished running {name}");
+                    _logger.LogInformation($"Finished running `{name}` task @ {now}.");
                     taskStatus.IsLastRunSuccessful = true;
                 }
                 catch (Exception ex)
@@ -176,7 +155,6 @@ namespace DNTScheduler.Core
                     _logger.LogCritical(0, ex, $"Failed running {name}");
                     taskStatus.IsLastRunSuccessful = false;
                     taskStatus.LastException = ex;
-                    OnUnexpectedException?.Invoke(ex, name);
                 }
                 finally
                 {

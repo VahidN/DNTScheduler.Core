@@ -16,7 +16,6 @@ namespace DNTScheduler.Core
         // </summary>
         private readonly object _sync = new object();
 
-
         private ThreadTimer _threadTimer; //keep it alive
 
         /// <summary>
