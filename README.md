@@ -1,3 +1,5 @@
+# This project has been merged with [DNTCommon.Web.Core](https://github.com/VahidN/DNTCommon.Web.Core)
+
 # DNTScheduler.Core
 
 DNTScheduler.Core is a lightweight ASP.NET Core's background tasks runner and scheduler.
